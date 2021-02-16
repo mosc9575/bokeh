@@ -1,3 +1,4 @@
+/** Roboto == Bokeh */
 @font-face {
   font-family: Bokeh;
   font-style: normal;
@@ -21,4 +22,61 @@
   font-style: normal;
   font-weight: normal;
   src: url("/fonts/RobotoMono-Regular.ttf") format("truetype");
+}
+
+/** STIX */
+@font-face {
+  font-family: Stix;
+  font-style: normal;
+  font-weight: normal;
+  src: url("/fonts/woff2/STIXTwoMath-Regular.woff2") format("woff2"),
+       url("/fonts/otf/STIXTwoMath-Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: Stix;
+  font-style: italic;
+  font-weight: normal;
+  src: url("/fonts/woff2/STIXTwoText-Italic.woff2") format("woff2"),
+       url("/fonts/otf/STIXTwoText-Italic.otf") format("opentype");
+}
+
+@font-face {
+  font-family: Stix;
+  font-style: normal;
+  font-weight: 500;
+  src: url("/fonts/woff2/STIXTwoText-Medium.woff2") format("woff2"),
+       url("/fonts/otf/STIXTwoText-Medium.otf") format("opentype");
+}
+
+@font-face {
+  font-family: Stix;
+  font-style: italic;
+  font-weight: 500;
+  src: url("/fonts/woff2/STIXTwoText-MediumItalic.woff2") format("woff2"),
+       url("/fonts/otf/STIXTwoText-MediumItalic.otf") format("opentype");
+}
+
+@font-face {
+  font-family: Stix;
+  font-style: normal;
+  font-weight: bold;
+  src: url("/fonts/woff2/STIXTwoText-Bold.woff2") format("woff2"),
+       url("/fonts/otf/STIXTwoText-Bold.otf") format("opentype");
+}
+
+@font-face {
+  font-family: Stix;
+  font-style: italic;
+  font-weight: bold;
+  src: url("/fonts/woff2/STIXTwoText-BoldItalic.woff2") format("woff2"),
+       url("/fonts/otf/STIXTwoText-BoldItalic.otf") format("opentype");
+}
+
+@font-face {
+  font-family: StixMath;
+  font-style: normal;
+  font-weight: normal;
+  src: url("/fonts/woff2/STIXTwoMath-Regular.woff2") format("woff2"),
+       url("/fonts/otf/STIXTwoMath-Regular.otf") format("opentype");
 }
