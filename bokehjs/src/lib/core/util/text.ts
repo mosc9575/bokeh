@@ -13,12 +13,24 @@ export function native_font_metrics(font: string): FontMetrics {
   ctx.font = font
   const metrics = ctx.measureText(metrics_text)
 
-  const ascent = metrics.actualBoundingBoxAscent
-  const descent = metrics.actualBoundingBoxDescent
+  const font_ascent = metrics.actualBoundingBoxAscent
+  const font_descent = metrics.actualBoundingBoxDescent
 
-  return {height: ascent + descent, ascent, descent}
+  if (font_ascent != null && font_descent != null) {
+    return {height: font_ascent + font_descent, ascent: font_ascent, descent: font_descent}
+  }
+
+  const text_ascent = metrics.actualBoundingBoxAscent
+  const text_descent = metrics.actualBoundingBoxDescent
+
+  if (text_ascent != null && text_descent != null) {
+    return {height: text_ascent + text_descent, ascent: text_ascent, descent: text_descent}
+  }
+
+  throw new Error("can't compute native font metrics")
 }
 
+/*
 function _font_metrics(font: string): FontMetrics {
   const canvas = document.createElement("canvas")
   const ctx = canvas.getContext("2d")!
@@ -66,13 +78,15 @@ function _font_metrics(font: string): FontMetrics {
 
   return {height: ascent + descent, ascent, descent}
 }
+*/
 
 const _metrics_cache: Map<string, FontMetrics> = new Map()
 
 export function font_metrics(font: string): FontMetrics {
   let metrics = _metrics_cache.get(font)
   if (metrics == null) {
-    metrics = _font_metrics(font)
+    // TODO: document.fonts.check(font)
+    metrics = native_font_metrics(font)
     _metrics_cache.set(font, metrics)
   }
   return metrics
