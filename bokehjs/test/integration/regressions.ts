@@ -2,7 +2,7 @@ import {display, fig, row, column, grid} from "./_util"
 
 import {
   Arrow, ArrowHead, NormalHead, OpenHead,
-  BoxAnnotation, LabelSet, Legend, LegendItem, Slope, Whisker,
+  BoxAnnotation, LabelSet, ColorBar, Legend, LegendItem, Slope, Whisker,
   Range1d, DataRange1d, FactorRange,
   ColumnDataSource, CDSView, BooleanFilter, IndexFilter, Selection,
   LinearAxis, CategoricalAxis,
@@ -13,7 +13,7 @@ import {
   Plot,
 } from "@bokehjs/models"
 
-import {Button, Select, MultiSelect, MultiChoice} from "@bokehjs/models/widgets"
+import {Button, Select, MultiSelect, MultiChoice, RadioGroup} from "@bokehjs/models/widgets"
 import {DataTable, TableColumn} from "@bokehjs/models/widgets/tables"
 
 import {Factor} from "@bokehjs/models/ranges/factor_range"
@@ -28,7 +28,7 @@ import {Random} from "@bokehjs/core/util/random"
 import {Matrix} from "@bokehjs/core/util/matrix"
 import {defer} from "@bokehjs/core/util/defer"
 import {Figure, MarkerArgs} from "@bokehjs/api/plotting"
-import {Spectral11} from "@bokehjs/api/palettes"
+import {Spectral11, turbo} from "@bokehjs/api/palettes"
 import {div} from "@bokehjs/core/dom"
 
 const n_marker_types = [...MarkerType].length
@@ -378,6 +378,20 @@ describe("Bug", () => {
 
       await display(row([p0, p1]))
     })
+
+    it("disallows to render multi-lines with NaNs using SVG backend", async () => {
+      function make_plot(output_backend: OutputBackend) {
+        const p = fig([300, 200], {output_backend})
+        const y = [NaN, 0, 1, 4, NaN, NaN, NaN, 3, 4, NaN, NaN, 5, 6, 9, 10]
+        p.multi_line({xs: [range(y.length)], ys: [y]})
+        return p
+      }
+
+      const p0 = make_plot("canvas")
+      const p1 = make_plot("svg")
+
+      await display(row([p0, p1]))
+    })
   })
 
   describe("in issue #10725", () => {
@@ -707,7 +721,7 @@ describe("Bug", () => {
   })
 
   describe("in issue #10507", () => {
-    it("prevents changing MultiSelect.disabled property", async () => {
+    it.allowing(22)("prevents changing MultiSelect.disabled property", async () => {
       const widget = new MultiSelect({value: ["2", "3"], options: ["1", "2", "3"], width: 200})
       const {view} = await display(widget, [250, 100])
       widget.disabled = true
@@ -716,7 +730,7 @@ describe("Bug", () => {
   })
 
   describe("in issue #10695", () => {
-    it("prevents showing MultiChoice's dropdown menu", async () => {
+    it.allowing(16)("prevents showing MultiChoice's dropdown menu", async () => {
       const random = new Random(1)
 
       const N = 10
@@ -804,6 +818,23 @@ describe("Bug", () => {
     })
   })
 
+  describe("in issue #11006", () => {
+    it("prevents scaling of superscripts when using non-px font size units", async () => {
+      const p = fig([300, 50], {
+        x_range: new Range1d({start: 10**-2, end: 10**11}),
+        y_range: new Range1d({start: 0, end: 1}),
+        x_axis_type: "log",
+        y_axis_type: null,
+        min_border_top: 0,
+        min_border_bottom: 0,
+        min_border_left: 20,
+        min_border_right: 20,
+      })
+      p.xaxis.map((axis) => axis.major_label_text_font_size = "14pt")
+      await display(p)
+    })
+  })
+
   describe("in issue #10809", () => {
     it("prevents repaint of resized layoutable renderers", async () => {
       const p = fig([100, 100])
@@ -852,6 +883,15 @@ describe("Bug", () => {
     })
   })
 
+  describe("in issue #11203", () => {
+    it("doesn't allow to set RadioGroup.active = null", async () => {
+      const widget = new RadioGroup({labels: ["1", "2", "3"], active: 1, inline: true, width: 200})
+      const {view} = await display(widget, [250, 50])
+      widget.active = null
+      await view.ready
+    })
+  })
+
   describe("in issue holoviews#4589", () => {
     it("disallows rendering two glyphs sharing a source and view", async () => {
       const source = new ColumnDataSource({
@@ -890,6 +930,29 @@ describe("Bug", () => {
       })
 
       await display(p)
+    })
+  })
+
+  describe("in issue #11231", () => {
+    it("doesn't allow to reposition inner axes after layout", async () => {
+      const random = new Random(1)
+      const p = fig([200, 200])
+
+      const color_mapper = new LinearColorMapper({palette: turbo(50), low: 0, high: 1})
+      const color_bar = new ColorBar({color_mapper, label_standoff: 12})
+      p.add_layout(color_bar, "right")
+
+      const dw = 10
+      const dh = 10
+      const img = ndarray(random.floats(dw*dh), {dtype: "float64", shape: [dw, dw]})
+      p.image({image: [img], x: 0, y: 0, dw, dh, color_mapper})
+
+      const {view} = await display(p, [350, 350])
+
+      p.width = 300
+      p.height = 300
+
+      await view.ready
     })
   })
 })

@@ -19,7 +19,7 @@ typical pure Python projects.
 In order to build BokehJS, the first step is to make sure that the "npm"
 command is installed. If you are using conda, you can typically just run
 
-    conda install -c bokeh nodejs
+    conda install -c conda-forge nodejs
 
 Otherwise, you can find general instructions for installing NodeJS here:
 
@@ -87,7 +87,7 @@ if len(sys.argv) == 2 and sys.argv[-1] == '--install-js':
 REQUIRES = [
     'PyYAML >=3.10',
     'python-dateutil >=2.1',
-    'Jinja2 >=2.7',
+    'Jinja2 >=2.9',
     'numpy >=1.11.3',
     'pillow >=7.1.0',
     'packaging >=16.8',

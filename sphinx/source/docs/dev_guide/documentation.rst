@@ -21,10 +21,12 @@ appreciated!* In addition to quick fixes, check the list of `Open Docs
 Issues`_ on GitHub. This list contains several projects as a starting
 point.
 
-This section describes Bokeh's `devguide_documentation_style_guidelines`_ for
-contributing to the documentation. This section also includes details on how to
-`devguide_documentation_build`_ and `devguide_documentation_edit`_ the
-documentation in your local development environment.
+This section describes Bokeh's
+:ref:`documentation style guidelines <devguide_documentation_style_guidelines>`
+for contributing to the documentation. This section also includes details on how
+to :ref:`build <devguide_documentation_build>` and
+:ref:`edit <devguide_documentation_edit>` the documentation in your local
+development environment.
 
 .. _`devguide_documentation_style_guidelines`:
 
@@ -104,7 +106,11 @@ Preparing your environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To build the documentation, follow the instructions in :ref:`devguide_setup`
-and make sure you have activated the ``bkdev`` environment.
+and make sure you have activated the ``bkdev`` environment:
+
+.. code-block:: sh
+
+    conda activate bkdev
 
 Some of the examples in the documentation require additional sample
 data. Use this command on a console to automatically download and install the
@@ -128,24 +134,26 @@ options:
 * Use a placeholder value like ``some_value`` instead of a valid API key. If
   you use a placeholder, some map plots in Bokeh's documentation might not be
   rendered correctly, but the documentation should otherwise be built correctly.
+  This will only affect your local environment and should have no effect on any
+  changes you might commit to the Bokeh repository.
 
-On Linux or macOS, use the following command to set the environment variable:
+After activating your conda environment, use the following command to set the
+environment variable:
 
 .. code-block:: sh
 
-    GOOGLE_API_KEY=some_value
+    conda env config vars set GOOGLE_API_KEY=some_value
 
-With the Windows PowerShell, use this command:
+Next, you have to reactivate your environment:
 
-.. code-block:: PowerShell
+.. code-block:: sh
 
-    $env:GOOGLE_API_KEY="some_value"
+    conda deactivate
+    conda activate bkdev
 
-In a Windows terminal, use this command:
-
-.. code-block:: doscon
-
-    set GOOGLE_API_KEY=some_value
+Using ``conda env config vars set`` makes this environment variable part of your
+``bkdev`` environment. When you activate your ``bkdev`` environment, conda will from
+now on set this environment variable for you.
 
 Building Bokeh's documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -303,8 +311,8 @@ For information on how to format text using reStructuredText, see the
 reStructuredText website`_.
 
 For information on writing style, see Bokeh's
-`devguide_documentation_style_guidelines`_ and the
-`Google developer documentation style guide`_.
+:ref:`documentation style guidelines <devguide_documentation_style_guidelines>`
+and the `Google developer documentation style guide`_.
 
 `Release Notes`_ are generally handled by the Bokeh core team as part of
 Bokeh's `release management`_. Each release should add a new file under

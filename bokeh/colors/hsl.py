@@ -23,6 +23,7 @@ import colorsys
 
 # Bokeh imports
 from .color import Color
+from ..util.deprecation import deprecated
 
 #-----------------------------------------------------------------------------
 # Globals and constants
@@ -41,6 +42,10 @@ class HSL(Color):
 
     Alpha values may also optionally be provided. Otherwise, alpha values
     default to 1.
+
+    .. warning::
+        HSL is deprecated as of Bokeh 2.3.1 and will be removed in a future
+        release. Use RGB or named colors instead.
 
     '''
 
@@ -61,6 +66,7 @@ class HSL(Color):
                 An alpha value for this color in [0, 1] (default: 1.0)
 
         '''
+        deprecated((2, 3, 1), "HSL()", "RGB() or named colors")
         self.h = h
         self.s = s
         self.l = l
@@ -70,7 +76,7 @@ class HSL(Color):
         ''' Return a copy of this color value.
 
         Returns:
-            HSL
+            :class:`~bokeh.colors.hsl.HSL`
 
         '''
         return HSL(self.h, self.s, self.l, self.a)
@@ -84,7 +90,7 @@ class HSL(Color):
                 The HSL color to copy.
 
         Returns:
-            HSL
+            :class:`~bokeh.colors.hsl.HSL`
 
         '''
         return value.copy()
@@ -98,7 +104,7 @@ class HSL(Color):
                 The RGB color to convert.
 
         Returns:
-            HSL
+            :class:`~bokeh.colors.hsl.HSL`
 
         '''
         return value.to_hsl()
@@ -119,7 +125,7 @@ class HSL(Color):
         ''' Return a HSL copy for this HSL color.
 
         Returns:
-            HSL
+            :class:`~bokeh.colors.hsl.HSL`
 
         '''
         return self.copy()
@@ -129,7 +135,7 @@ class HSL(Color):
         this HSL color.
 
         Returns:
-            HSL
+            :class:`~bokeh.colors.rgb.RGB`
 
         '''
         from .rgb import RGB # prevent circular import
