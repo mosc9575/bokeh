@@ -29,7 +29,7 @@ __all__ = (
     'double_stack',
     'is_stacker',
     'single_stack',
-    'stacker_to_list',
+    'stackers_to_list',
 )
 
 #-----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ __all__ = (
 def is_stacker(stacker):
     return isinstance(stacker, (list, tuple))
 
-def stacker_to_list(value):
+def stackers_to_list(value):
     if pd:
         if isinstance(value, pd.DataFrame):
             value = value.columns.to_list()
