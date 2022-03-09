@@ -53,6 +53,7 @@ from .glyphs import (
     ConnectedXYGlyph,
     Glyph,
     MultiLine,
+    MultiPolygons,
 )
 from .graphics import Decoration, Marking
 from .graphs import GraphHitTestPolicy, LayoutProvider, NodesOnly
@@ -69,6 +70,7 @@ from .tiles import TileSource, WMTSTileSource
 #-----------------------------------------------------------------------------
 
 __all__ = (
+    'ContourRenderer',
     'DataRenderer',
     'GlyphRenderer',
     'GraphRenderer',
@@ -153,6 +155,7 @@ class DataRenderer(Renderer):
     '''
 
     level = Override(default="glyph")
+
 
 class GlyphRenderer(DataRenderer):
     '''
@@ -248,6 +251,25 @@ class GlyphRenderer(DataRenderer):
                 glyph.decorations.append(decoration)
 
         return decoration
+
+
+_DEFAULT_CONTOUR_LINE_RENDERER = lambda: GlyphRenderer(
+    glyph=MultiLine(), data_source=ColumnDataSource(data=dict())
+)
+
+_DEFAULT_CONTOUR_FILL_RENDERER = lambda: GlyphRenderer(
+    glyph=MultiPolygons(), data_source=ColumnDataSource(data=dict())
+)
+
+class ContourRenderer(DataRenderer):
+    '''
+    '''
+    line_renderer = Instance(GlyphRenderer, default=_DEFAULT_CONTOUR_LINE_RENDERER, help="""
+    """)
+
+    fill_renderer = Instance(GlyphRenderer, default=_DEFAULT_CONTOUR_FILL_RENDERER, help="""
+    """)
+
 
 _DEFAULT_NODE_RENDERER = lambda: GlyphRenderer(
     glyph=Circle(), data_source=ColumnDataSource(data=dict(index=[]))
